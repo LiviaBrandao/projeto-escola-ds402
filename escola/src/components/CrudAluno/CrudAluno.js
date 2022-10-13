@@ -6,9 +6,13 @@ import Main from '../template/Main';
 const title = "Cadastro de Alunos";
 
 const urlAPI = "http://localhost:5001/api/aluno";
+const urlCurso = "http://localhost:5001/api/curso";
+
 const initialState = {
     aluno: { id: 0, ra: '', nome: '', codCurso: 0 },
-    lista: []
+    lista: [],
+    curso: { id: 0, codCurso: '', nomeCurso: ''},
+    listaCurso: []
 }
 
 export default class CrudAluno extends Component {
@@ -19,6 +23,9 @@ export default class CrudAluno extends Component {
         axios(urlAPI).then(resp => {
             this.setState({ lista: resp.data })
         })
+        axios(urlCurso).then(resp => {
+            this.setState({ listaCurso: resp.data })
+        })
     }
 
     limpar() {
@@ -27,6 +34,7 @@ export default class CrudAluno extends Component {
 
     salvar() {
         const aluno = this.state.aluno;
+        console.log(aluno.codCurso + "");
         aluno.codCurso = Number(aluno.codCurso);
         const metodo = aluno.id ? 'put' : 'post';
         const url = aluno.id ? `${urlAPI}/${aluno.id}` : urlAPI;
@@ -63,6 +71,7 @@ export default class CrudAluno extends Component {
             console.log("entrou no confirm");
             axios['delete'](url, aluno.id)
                 .then(resp => {
+                    console.log("entrou no then " + aluno.id);
                     const lista = this.getListaAtualizada(aluno, false)
                     this.setState({ aluno: initialState.aluno, lista })
                 })
@@ -99,20 +108,20 @@ export default class CrudAluno extends Component {
 
                     onChange={e => this.atualizaCampo(e)}
                 />
-                <label> Código do Curso: </label>
-                <input
-                    type="number"
-                    id="codCurso"
-                    placeholder="15"
-
-                    className="form-input"
-                    name="codCurso"
-                    min="10" 
-                    max="100"
-
-                    value={this.state.aluno.codCurso}
+                <label>Curso:</label>
+                <select 
                     onChange={e => this.atualizaCampo(e)}
-                />
+                    name="cursos" 
+                    id="cursos"
+                    placeholder="Nome do Curso"
+                    className="form-input">
+
+                    {this.state.listaCurso.map((curso) => (
+                        <option key={curso.id} value={curso.codCurso}>
+                            {curso.nomeCurso}
+                        </option>
+                    ))}
+                </select>
                 <button className="btnSalvar"
                     onClick={e => this.salvar(e)} >
                     Salvar
