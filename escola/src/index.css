@@ -1,0 +1,13 @@
+:root {
+  --bg-menu: #bdbbbb;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Pacifico", sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
